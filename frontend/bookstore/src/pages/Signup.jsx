@@ -1,12 +1,15 @@
+
+
 import React, { useState } from 'react';
 import API from '../api/axiosInstance';
 import { useNavigate } from 'react-router-dom';
+import { Container, Form, Button, Card } from 'react-bootstrap';
 
-export default function Signup(){
-  const [name,setName]=useState('');
-  const [email,setEmail]=useState('');
-  const [password,setPassword]=useState('');
-  const [role,setRole]=useState('user');
+export default function Signup() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [role, setRole] = useState('user');
   const navigate = useNavigate();
 
   const submit = async (e) => {
@@ -22,18 +25,55 @@ export default function Signup(){
   };
 
   return (
-    <form onSubmit={submit} style={{ padding: 16 }}>
-      <h3>Signup</h3>
-      <div><input placeholder="Name" value={name} onChange={e=>setName(e.target.value)} /></div>
-      <div><input placeholder="Email" value={email} onChange={e=>setEmail(e.target.value)} /></div>
-      <div><input placeholder="Password" type="password" value={password} onChange={e=>setPassword(e.target.value)} /></div>
-      <div>
-        <select value={role} onChange={e=>setRole(e.target.value)}>
-          <option value="user">User</option>
-          <option value="seller">Seller</option>
-        </select>
-      </div>
-      <button type="submit">Signup</button>
-    </form>
+    <Container className="mt-5 d-flex justify-content-center">
+      <Card className="shadow-sm p-4" style={{ maxWidth: '400px', width: '100%' }}>
+        <h3 className="mb-3 text-center">Signup</h3>
+        <Form onSubmit={submit}>
+          <Form.Group className="mb-3" controlId="formName">
+            <Form.Control
+              type="text"
+              placeholder="Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formEmail">
+            <Form.Control
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formPassword">
+            <Form.Control
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formRole">
+            <Form.Select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            >
+              <option value="user">User</option>
+              <option value="seller">Seller</option>
+            </Form.Select>
+          </Form.Group>
+
+          <Button type="submit" variant="success" className="w-100">
+            Signup
+          </Button>
+        </Form>
+      </Card>
+    </Container>
   );
 }

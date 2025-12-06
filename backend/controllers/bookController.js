@@ -3,7 +3,9 @@ const Book = require('../models/BookSchema');
 exports.addBook = async (req, res) => {
   try {
     const { title, author, genre, price, description } = req.body;
-    const itemImage = req.file ? `uploads/${req.file.filename}` : '';
+    // const itemImage = req.file ? `uploads/${req.file.filename}` : '';
+    // addBook
+    const itemImage = req.file ? req.file.filename : '';
     const sellerId = req.user.id;
     const sellerName = req.user.name || '';
 
@@ -52,7 +54,8 @@ exports.updateBook = async (req, res) => {
       return res.status(403).json({ msg: 'Forbidden' });
     }
     const { title, author, genre, price, description } = req.body;
-    if (req.file) b.itemImage = `uploads/${req.file.filename}`;
+    // if (req.file) b.itemImage = `uploads/${req.file.filename}`;
+    if (req.file) b.itemImage = req.file.filename;
     if (title) b.title = title;
     if (author) b.author = author;
     if (genre) b.genre = genre;

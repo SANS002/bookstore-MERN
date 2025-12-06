@@ -1,8 +1,11 @@
+
+
 import React, { useState } from 'react';
 import API from '../api/axiosInstance';
 import { useNavigate } from 'react-router-dom';
+import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
 
-export default function CartPage(){
+export default function CartPage() {
   const [cart, setCart] = useState(JSON.parse(localStorage.getItem('cart') || '[]'));
   const [flatno, setFlatno] = useState('');
   const [pincode, setPincode] = useState('');
@@ -12,7 +15,7 @@ export default function CartPage(){
 
   const remove = (index) => {
     const c = [...cart];
-    c.splice(index,1);
+    c.splice(index, 1);
     setCart(c);
     localStorage.setItem('cart', JSON.stringify(c));
   };
@@ -22,7 +25,7 @@ export default function CartPage(){
     if (!token) return navigate('/login');
     const total = cart.reduce((s, c) => s + Number(c.price || 0), 0).toString();
     try {
-      const res = await API.post('/orders', { books: cart, totalAmount: total, flatno, pincode, city, state });
+      await API.post('/orders', { books: cart, totalAmount: total, flatno, pincode, city, state });
       localStorage.removeItem('cart');
       alert('Order placed');
       navigate('/myorders');
@@ -32,25 +35,75 @@ export default function CartPage(){
   };
 
   return (
-    <div style={{ padding: 16 }}>
-      <h3>Cart</h3>
-      {cart.length === 0 ? <div>Cart is empty</div> : (
+    <Container className="mt-4">
+      <h3 className="mb-3">Cart</h3>
+      {cart.length === 0 ? (
+        <p>Cart is empty</p>
+      ) : (
         <>
-          {cart.map((c, i) => (
-            <div key={i} style={{ borderBottom: '1px solid #ddd', padding:8 }}>
-              <div>{c.title} - ₹{c.price}</div>
-              <button onClick={()=>remove(i)}>Remove</button>
-            </div>
-          ))}
-          <div style={{ marginTop: 10 }}>
-            <input placeholder="Flat no" value={flatno} onChange={e=>setFlatno(e.target.value)} />
-            <input placeholder="Pincode" value={pincode} onChange={e=>setPincode(e.target.value)} />
-            <input placeholder="City" value={city} onChange={e=>setCity(e.target.value)} />
-            <input placeholder="State" value={state} onChange={e=>setState(e.target.value)} />
-            <button onClick={placeOrder}>Place order</button>
-          </div>
+          <Row>
+            {cart.map((c, i) => (
+              <Col md={6} key={i} className="mb-3">
+                <Card className="shadow-sm">
+                  <Card.Body className="d-flex justify-content-between align-items-center">
+                    <div>
+                      <Card.Title>{c.title}</Card.Title>
+                      <Card.Text>₹{c.price}</Card.Text>
+                    </div>
+                    <Button variant="danger" size="sm" onClick={() => remove(i)}>
+                      Remove
+                    </Button>
+                  </Card.Body>
+                </Card>
+              </Col>
+            ))}
+          </Row>
+
+          {/* Address Form */}
+          <Card className="shadow-sm mt-4">
+            <Card.Body>
+              <h5 className="mb-3">Shipping Address</h5>
+              <Form>
+                <Row className="mb-3">
+                  <Col md={6}>
+                    <Form.Control
+                      placeholder="Flat no"
+                      value={flatno}
+                      onChange={(e) => setFlatno(e.target.value)}
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <Form.Control
+                      placeholder="Pincode"
+                      value={pincode}
+                      onChange={(e) => setPincode(e.target.value)}
+                    />
+                  </Col>
+                </Row>
+                <Row className="mb-3">
+                  <Col md={6}>
+                    <Form.Control
+                      placeholder="City"
+                      value={city}
+                      onChange={(e) => setCity(e.target.value)}
+                    />
+                  </Col>
+                  <Col md={6}>
+                    <Form.Control
+                      placeholder="State"
+                      value={state}
+                      onChange={(e) => setState(e.target.value)}
+                    />
+                  </Col>
+                </Row>
+                <Button variant="primary" className="w-100" onClick={placeOrder}>
+                  Place Order
+                </Button>
+              </Form>
+            </Card.Body>
+          </Card>
         </>
       )}
-    </div>
+    </Container>
   );
 }

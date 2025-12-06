@@ -1,6 +1,9 @@
+
+
 import React, { useEffect, useState } from 'react';
 import API from '../api/axiosInstance';
 import { Link } from 'react-router-dom';
+import { Container, Row, Col, Card, Button, Form } from 'react-bootstrap';
 
 export default function Home() {
   const [books, setBooks] = useState([]);
@@ -30,42 +33,57 @@ export default function Home() {
   };
 
   return (
-    <div style={{ padding: 16 }}>
-      <h2>Books</h2>
-      <div style={{ marginBottom: 10 }}>
-        <input
+    <Container className="mt-4">
+      <h2 className="mb-3">Books</h2>
+
+      {/* Search Form */}
+      <Form className="mb-4 d-flex gap-2">
+        <Form.Control
+          type="text"
           placeholder="Search by title"
           value={q}
-          onChange={e => setQ(e.target.value)}
+          onChange={(e) => setQ(e.target.value)}
         />
-        <input
+        <Form.Control
+          type="text"
           placeholder="Genre"
           value={genre}
-          onChange={e => setGenre(e.target.value)}
+          onChange={(e) => setGenre(e.target.value)}
         />
-        <button onClick={search}>Search</button>
-      </div>
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill,minmax(220px,1fr))',
-        gap: 12
-      }}>
-        {books.map(b => (
-          <div key={b._id} style={{ border: '1px solid #ccc', padding: 10 }}>
-            {b.itemImage && (
-              <img
-                src={`${import.meta.env.VITE_API_URL?.replace('/api','')}/${b.itemImage}`}
-                alt={b.title}
-                style={{ width: '100%', height: 150, objectFit: 'cover' }}
-              />
-            )}
-            <h4>{b.title}</h4>
-            <p>Author: {b.author}</p>
-            <p>Price: ₹{b.price}</p>
-            <Link to={`/book/${b._id}`}>View</Link>
-          </div>
+        <Button variant="primary" onClick={search}>
+          Search
+        </Button>
+      </Form>
+
+      {/* Books Grid */}
+      <Row>
+        {books.map((b) => (
+          <Col md={4} sm={6} xs={12} key={b._id} className="mb-3">
+            <Card className="shadow-sm h-100">
+              {b.itemImage && (
+                <Card.Img
+                  variant="top"
+                  src={`http://localhost:5000/uploads/${b.itemImage}`}
+                  alt={b.title}
+                  style={{ height: '200px', objectFit: 'cover' }}
+                  />
+
+
+        
+              )}
+              <Card.Body>
+                <Card.Title>{b.title}</Card.Title>
+                <Card.Text>Author: {b.author}</Card.Text>
+                <Card.Text>Price: ₹{b.price}</Card.Text>
+                <Button as={Link} to={`/book/${b._id}`} variant="outline-primary" size="sm">
+                  View
+                </Button>
+              </Card.Body>
+            </Card>
+          </Col>
         ))}
-      </div>
-    </div>
+      </Row>
+    </Container>
   );
 }
+

@@ -11,6 +11,7 @@ import MyOrders from './pages/MyOrders';
 import CartPage from './pages/CartPage';
 import SellerMyProducts from './pages/Seller/MyProducts';
 import BookDetails from './pages/BookDetails';
+import PrivateRoute from "./components/PrivateRoute";
 
 export default function App() {
   return (
